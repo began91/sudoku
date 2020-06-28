@@ -18,10 +18,21 @@ table, tbody {
 
 .square {
   margin: 2px;
+  /* border: 1px solid gray; */
 }
 
-input {
-  width: 50px;
+.active {
+  background-color: red;
+}
+
+.highlight {
+  background-color: green;
+}
+
+.input {
+  width: 30px;
+  height: 30px;
+  border: 1px solid skyblue;
 }
 
 .poss-grid {

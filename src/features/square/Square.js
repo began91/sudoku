@@ -1,71 +1,52 @@
-import React from 'react';
+import React, {useEffect} from 'react';
+import ReactDOM from 'react-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { setSquare } from './squareSlice';
+import { setSquare, highlightNeighbors } from './squareSlice';
 import { neighborsOf } from './helper';
 
+
 export const Square = props => {
-    let dispatch = useDispatch()
-    let square = String(props.row) + String(props.col);
+    const dispatch = useDispatch()
+    const square = String(props.row) + String(props.col);
+    const neighbors = neighborsOf(square)
+    const value = useSelector(state => state.square.board[square]);
+    const isActive = useSelector(state => state.square.active === square);
+    const isHighlighted = useSelector(state => state.square.highlight.includes(square));
 
-    let value = useSelector(state => state.square.board[square]);
-    let possible = useSelector(state => {
-        let poss = [false, true, true, true, true, true, true, true, true, true];
-        neighborsOf(square).forEach(neighbor => {
-            let neighborVal = state.square.board[neighbor];
-            if (neighborVal) {
-                poss[neighborVal] = false;
-            }
-        });
-        return poss;
+    if (isActive) {
+        dispatch(highlightNeighbors({active: square, neighbors: neighbors}));
     }
-    )
 
-    // useEffect(() => {
-    //     //sets the last possible value if theres only one; dangerous running simultaneous with others
-    //     // if (possible.filter(a => a).length === 1 && !value) {
-    //     //     dispatch(setSquare({
-        //     //         square,
-        //     //         value: possible.findIndex(a => a)
-        //     //     }))
-        //     // }
-        // })
-        
-        //let squares = useSelector(state => state.square);
     const handleChange = e => {
         dispatch(setSquare({square: square, value: Number(e.target.value) || e.target.className[0]}));
     }
 
-    const PossGrid = props => {
-        let tinies = [];
-        for (let i = 0; i < 3; i++) {
-            let babies = [];
-            for (let j=0; j<3; j++) {
-                let num = i*3 + 1 + j;
-                babies.push(<td key={j}
-                    className={String(num) + ' tiny ' + (possible[num] ? 'green' : 'red')}
-                    onClick={handleChange}
-                    >{num}</td>)
-            }
-            tinies.push(<tr key={i}>{babies}</tr>);
-        }
-        
-
-
-        return (
-            <table className="poss-grid">
-                <tbody>
-                    {tinies}
-                </tbody>
-            </table>
-        );
+    const handleFocus = e => {
+        dispatch(highlightNeighbors({active: square, neighbors: neighbors}));
     }
-    
 
+    const handleKeyPress = e => {
+        let keyCode = e.keyCode;
+        console.log(keyCode);
+        if (isActive) {
+            if (keyCode > 48 && keyCode <= 57) {
+                dispatch(setSquare({square: square, value: keyCode-48}));
+            }
+        }
+    }
+
+    const classes = 'square ' + (isActive ? 'active ' : '') + (isHighlighted ? 'highlight' : '');
+
+    // useEffect(() => {
+    //     if (isActive) {
+    //         ReactDOM.findDOMNode(this.refs[square]).focus()
+    //     }
+    // })
     //make the square red if it is erroneous? using fitsWithNeighbors?
     return (
-        <div className={"square" + (true ? '': '')}>
-            <input type="number" min="1" max="9" value={value} onChange={handleChange}/>
-            {/* <PossGrid/> */}
+        <div className={classes}>
+            <div className={value + "input"} onChange={handleChange}
+            onFocus={handleFocus} onClick={handleFocus} onKeyPress={handleKeyPress}>{value}</div>
         </div>
     )
 }

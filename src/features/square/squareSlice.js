@@ -14,7 +14,8 @@ export const squareSlice = createSlice({
     name: 'square',
     initialState: {
         board: initialState,
-        //solution: {},
+        highlight: [],
+        active: '11',
         isSolvable: true
     },
     reducers: {
@@ -31,11 +32,14 @@ export const squareSlice = createSlice({
         },
         resetPuzzle: (state) => {
             state.board = initialState;            
+        },
+        highlightNeighbors: (state, action) => {
+            state.active = action.payload.active;
+            state.highlight = action.payload.neighbors;
         }
-        
     }
 })
 
-export const { setSquare, setSolution, setSolvable, resetPuzzle } = squareSlice.actions;
+export const { setSquare, setSolution, setSolvable, resetPuzzle, highlightNeighbors } = squareSlice.actions;
 
 export default squareSlice.reducer;
