@@ -65,7 +65,7 @@ export const Square = props => {
     return (
         <div className={"square" + (true ? '': '')}>
             <input type="number" min="1" max="9" value={value} onChange={handleChange}/>
-            <PossGrid/>
+            {/* <PossGrid/> */}
         </div>
     )
 }

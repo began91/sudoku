@@ -12,7 +12,7 @@ import { setSolvable, setSolution, resetPuzzle } from './features/square/squareS
 function App() {
   let dispatch = useDispatch();
   let isSolvable = useSelector(state => state.square.isSolvable);
-  const [solvedPuzzle, setSolvedPuzzle] = useState({});
+  //const [solvedPuzzle, setSolvedPuzzle] = useState({});
   const [isSolved, setSolved] = useState(false);
   
   const Box = props => {
@@ -57,16 +57,17 @@ function App() {
   
   const squares = useSelector(state=> state.square.board);
   
-  useEffect(() => {
-    let a = setSolvedPuzzle(getSolution(squares));
-    if (!a) {
-      setSolvable(false)
-    }
-  }, [squares]);
+  // useEffect(() => {
+  //   let a = setSolvedPuzzle(getSolution(squares));
+  //   if (!a) {
+  //     setSolvable(false)
+  //   }
+  // }, [squares]);
   
   const solve = e => {
-    setSolved(true);
+    let solvedPuzzle = getSolution(squares);
     dispatch(setSolution(solvedPuzzle));
+    setSolved(true);
   }
 
   const reset = e => {

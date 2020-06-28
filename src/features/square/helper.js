@@ -48,52 +48,54 @@ export const getSolution = (squares) => {
     };
     
     //for each empty square
-    let empties = Object.entries(squares).filter(([square,value]) => !value).map(([square,value]) => square); //list of string corresponding to empty squares
+    // let empties = Object.entries(squares).filter(([square,value]) => !value).map(([square,value]) => square); //list of string corresponding to empty squares
     
-    const findSolution = (emptyList, solvedSquares) => {
-        let isSolved = false;
-        let isSolvable = true;
-        console.log(`Solving for ${emptyList}`);
-        //if theres nothing in the emptylist, there's nothing to evaluate. The solution is good
-        if (emptyList.length===0) {
-            isSolved = true;
-            isSolvable = true;
+    const findSolution = solvedSquares => {
+        let index = Object.entries(solvedSquares).findIndex(([square,value]) => !value)
+        //if theres no empty, there's nothing to evaluate. The solution is good
+        if (index === -1) {
+            let isSolved = true;
+            let isSolvable = true;
             return ([solvedSquares, isSolved, isSolvable]); //solvedsquares, isSolved, isSolvable
         }
+
+        let empty = Object.entries(solvedSquares)[index][0];
+        let isSolved = false;
+        let isSolvable = true;
+        // console.log(`Solving for ${empty}`);
+
         //if the puzzle isnt impossible, and it hasn't been solved yet
         while (isSolvable && !isSolved) {
-            //grab the first empty box
-            let empty = emptyList.shift();
             //console.log(empty);
             //find all possible options for that box
             let possVals = getPossibleValuesInSolution(empty, solvedSquares);
-            console.log(`${empty}: ${possVals}`)
+            // console.log(`${empty}: ${possVals}`)
             //if there are options and the puzzle isnt solved yet
             while ((possVals.length > 0) && !isSolved) {
                 //console.log(possVals);
                 //try the first possible option for that box
                 let tryVal = possVals.shift();
-                console.log(`Trying: ${tryVal} in ${empty}`);
+                // console.log(`Trying: ${tryVal} in ${empty}`);
                 solvedSquares[empty] = tryVal;
                 //find a solution for a set with the first box solved
-                [solvedSquares, isSolved, isSolvable] = findSolution(emptyList, solvedSquares);
+                [solvedSquares, isSolved, isSolvable] = findSolution(solvedSquares);
                 if (!isSolvable) {
                     //emptyList.unshift(empty);
                 }
             }
             if (possVals.length === 0 && !isSolved) {
-                console.log(`No available values for ${empty}! Going back to previous.`)
-                console.log(`adding ${empty} back to list`);
-                emptyList.unshift(empty);
+                // console.log(`No available values for ${empty}! Going back to previous.`)
+                // console.log(`adding ${empty} back to list`);
+                solvedSquares[empty] = '';
                 
                 isSolvable = false;
-                console.log(`Returning, isSolvable=${isSolvable} for ${empty}`)
+                // console.log(`Returning, isSolvable=${isSolvable} for ${empty}`)
             }
             return ([solvedSquares, isSolved, isSolvable]);
         }
     }
     
-    let [ a, b, c] = findSolution(empties, squares)
+    let [ a, b, c] = findSolution(squares)
     console.log(b ? 'solved': 'unsolved', c ? 'solvable' : 'unsolvable');
     return b ? a : null;
     //setSolution(solution);
