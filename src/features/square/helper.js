@@ -25,6 +25,7 @@ export const neighborsOf = square => {
 
 export const getSolution = (squares) => {
     squares = {...squares};
+    let solvable = true;
     const getPossibleValuesInSolution = (square, solvedSquares) => {
         let possVals = [1,2,3,4,5,6,7,8,9]
         neighborsOf(square).forEach(neighbor => {
@@ -43,6 +44,7 @@ export const getSolution = (squares) => {
     let filled = Object.entries(squares).filter(([square,value]) => !!value);
     if (filled.filter(([square,value]) => !fitsWithNeighbors(square,value)).length !==0) {
         setSolvable(false); //not solvable
+        solvable = false;
     } else {
         setSolution(squares);
     };
@@ -95,9 +97,14 @@ export const getSolution = (squares) => {
         }
     }
     
-    let [ a, b, c] = findSolution(squares)
-    console.log(b ? 'solved': 'unsolved', c ? 'solvable' : 'unsolvable');
-    return b ? a : null;
+    if (solvable) {
+        let [ a, b, c] = findSolution(squares)//solvedsquares, isSolved, isSolvable
+        console.log(b ? 'solved': 'unsolved', c ? 'solvable' : 'unsolvable');
+        return b ? a : null;
+    } else {
+        console.log('unsolvable');
+        return null;
+    }
     //setSolution(solution);
     //setSolvable(isSolvable);
 }

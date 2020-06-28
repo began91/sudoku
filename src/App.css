@@ -22,18 +22,27 @@ table, tbody {
 }
 
 .active {
-  background-color: red;
+  background-color: rgb(61, 137, 238);
 }
 
 .highlight {
-  background-color: green;
+  background-color: skyblue;
 }
 
-.input {
+input {
   width: 30px;
   height: 30px;
   border: 1px solid skyblue;
+  cursor: pointer;
+  text-align: center;
+  text-justify: center;
+  font-size: 20px;
 }
+
+input:focus {
+  outline: none;
+}
+
 
 .poss-grid {
   display: inline-block;

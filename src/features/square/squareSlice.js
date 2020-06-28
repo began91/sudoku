@@ -15,13 +15,22 @@ export const squareSlice = createSlice({
     initialState: {
         board: initialState,
         highlight: [],
-        active: '11',
+        active: '55',
         isSolvable: true
     },
     reducers: {
         setSquare: (state, action) => {
             // console.log(action.payload);
-            state.board[action.payload.square] = Number(action.payload.value);
+            let value;
+            if (Number(action.payload.value)) {
+                value = Number(action.payload.value)
+            } else {
+                value = ''
+            }
+            if (value > 9) {
+                value = Number(String(value)[1])
+            }
+            state.board[action.payload.square] = value;
         },
         setSolution: (state, action) => {
             //console.log(action.payload);
