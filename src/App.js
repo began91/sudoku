@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {useSelector, useDispatch } from 'react-redux'
-import { getSolution } from './features/square/helper';
+import { getSolution, getSortSolution } from './features/square/helper';
 import './App.css';
 import { setSolution, resetPuzzle } from './features/square/squareSlice';
 import { Board } from './components/Board';
@@ -18,6 +18,16 @@ function App() {
     dispatch(setSolution(solvedPuzzle));
     setSolved(true);
   }
+  
+  const sortSolve = e => {
+    let result = getSortSolution(squares);
+    if (!result) {
+      // console.log('unsolvable');
+    } else {
+      dispatch(setSolution(result));
+      setSolved(true);
+    }
+  }
 
   const reset = e => {
     setSolved(false);
@@ -31,7 +41,11 @@ function App() {
       </header>
         <Board/>
         {!isSolved ? 
-        <button onClick={solve} disabled={!isSolvable}>{isSolvable ? 'Solve!' : 'No Solution!'}</button> :
+        <>
+        {/* <button onClick={solve} disabled={!isSolvable}>{isSolvable ? 'Solve!' : 'No Solution!'}</button>  */}
+        <button onClick={sortSolve} disabled={!isSolvable}>{isSolvable ? 'Solve!' : 'No Solution!'}</button>
+        </>
+        :
         <button onClick={reset}>Reset</button>
         }
     </div>
