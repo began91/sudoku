@@ -2,6 +2,76 @@
 //import { useSelector } from 'react-redux';
 import { setSolution, setSolvable } from './squareSlice';
 
+export const allSquares = () => {
+    let squares = [];
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            let row = i + 1;
+            let col = j + 1;
+            squares.push(String(row)+String(col));
+        }
+    }
+    return squares;
+}
+
+export const RCBV = () => {//rows, columns, boxes, values
+    return [1,2,3,4,5,6,7,8,9];
+}
+
+export const boxOfSquare= square => {
+    let row = square[0];
+    let col = square[1];
+    let box = Math.floor((row-1)/3)*3 + 1 + Math.floor((col-1)/3);
+    return box;
+}
+
+export const squaresIn = (type, RCB) => {
+    let squares = [];
+    switch (type) {
+        case 'row':
+            for (let i = 1; i < 10; i++) {
+                squares.push(String(RCB) + String(i));
+            }
+            break;    
+        case 'col':
+            for (let i = 1; i < 10; i++) {
+                squares.push(String(i) + String(RCB));
+            }
+            break;
+        case 'box':
+            let i = RCB - 1;
+            for (let j=0; j<9; j++) {
+                let row = (Math.floor(i/3)*3 + 1) + Math.floor(j/3);
+                let col = ((i % 3) * 3) + 1 + (j % 3);
+                squares.push(String(row)+String(col));
+            }
+            break;
+        default:
+            return undefined;
+    }
+    return squares;
+}
+
+// export const boxesOfCol = col => {
+//     let boxes = [];
+//     return boxes;
+// }
+
+// export const boxesOfRow = row => {
+//     let boxes = [];
+//     return boxes;
+// }
+
+// export const rowsOfBox = box => {
+//     let rows = [];
+//     return rows;
+// }
+
+// export const colsOfBox = box => {
+//     let cols = [];
+//     return cols;
+// }
+
 export const neighborsOf = square => {
     let neighbors = []
     let row = Number(square[0]);
@@ -21,6 +91,10 @@ export const neighborsOf = square => {
     }
     //console.log([...new Set(neighbors.filter(neighbor => neighbor!==square))]); 
     return ([...new Set(neighbors.filter(neighbor => neighbor!==square))]); 
+}
+
+export const neighborsOfBoth = (square1, square2) => {
+    return neighborsOf(square1).filter(neighbor => neighborsOf(square2).includes(neighbor))
 }
 
 export const getSolution = (squares) => {
@@ -120,10 +194,11 @@ export const getSolution = (squares) => {
 // 
 export const getSortSolution = (squares) => {
     let solvable = true;
-    squares = {...squares};//make a copy
+    squares = {...squares};//make a copy to not affect redux store, yet
+
+    //start with a smart squares object, each square knows who its neighbors are and what possible values it can have.
     //squares is of the form {'11':value, '12': value}
     //change squares to {'11': {value: value, possVals: [], neighbors: []}}
-    //start with a smart squares object, each square knows who its neighbors are and what possible values it can have.
     let squareKeys = Object.keys(squares);
 
     Object.entries(squares).forEach(([square,value]) => {

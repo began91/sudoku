@@ -1,14 +1,42 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 let initialState = {};
+let presetBoard = [
+    [4, , ,  , , ,   , , 2],
+    [, 6, ,  4, , 8,   , 3, 1],
+    [, , 1,  , , ,   6, , 4],
+
+    [, 4, ,   1, , 7,   , 5, ],
+    [1, , ,   , 8, ,   4, , ],
+    [, 5, ,   3, , 4,   , 1, ],
+
+    [6, 7, 9,   8, 4, 3,   1, 2, 5],
+    [, 1, ,   6, , 2,   , 4, ],
+    [2, 3, 4,   , , ,   , 6, 8]
+];
+// let presetBoard = [
+//     [4, , ,  , , ,   , , 2],
+//     [, 6, ,  4, , 8,   , 3, ],
+//     [, , 1,  , , ,   6, , ],
+
+//     [, 4, ,   1, , 7,   , 5, ],
+//     [, , ,   , 8, ,   , , ],
+//     [, 5, ,   3, , 4,   , 1, ],
+
+//     [, , 9,   , , ,   1, , ],
+//     [, 1, ,   6, , 2,   , 4, ],
+//     [2, , ,   , , ,   , , 8]
+// ];
 
 for (let i = 0; i < 9; i++) {
     for (let j = 0; j < 9; j++) {
-        let row = (Math.floor(i/3)*3 + 1) + Math.floor(j/3);
-        let col = (((i % 3) * 3) + 1) + (j % 3)
-        initialState[String(row)+String(col)] = ''
+        let row = i + 1;
+        let col = j + 1;
+        initialState[String(row)+String(col)] = presetBoard[i][j] || '';
     }
 }
+
+
 
 export const squareSlice = createSlice({
     name: 'square',

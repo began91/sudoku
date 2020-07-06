@@ -1,20 +1,17 @@
 import React from 'react';
 import { Square } from '../features/square/Square';
+import { squaresIn } from '../features/square/helper';
 
 
 export const Board = props => {
     const Box = props => {
-        let i = props.box-1;
-        let squares = [];
-        for (let j=0; j<9; j++) {
-            //give squares naming convention `${row}${col}`
-            let row = (Math.floor(i/3)*3 + 1) + Math.floor(j/3);
-            let col = ((i % 3) * 3) + 1 + (j % 3);
-            let square = String(row)+String(col);
-            squares.push(<Square 
-                row={row} col={col} 
-                key={square} square={square}/>)
-        }
+        let squares = squaresIn('box', props.box).map(square => {
+          return (
+            <Square row={square[0]} col={square[1]}
+            key={square} square={square}/>
+          );
+        });
+
         return (
           <td className="box">
             {squares}

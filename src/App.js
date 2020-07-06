@@ -1,23 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {useSelector, useDispatch } from 'react-redux'
-import { getSolution, getSortSolution } from './features/square/helper';
+import { getSortSolution } from './features/square/helper';
 import './App.css';
 import { setSolution, resetPuzzle } from './features/square/squareSlice';
 import { Board } from './components/Board';
-
+import Puzzle2 from './features/square/Puzzle2';
 
 function App() {
   let dispatch = useDispatch();
   let isSolvable = useSelector(state => state.square.isSolvable);
   const [isSolved, setSolved] = useState(false);
   
+  
   const squares = useSelector(state=> state.square.board);
   
-  const solve = e => {
-    let solvedPuzzle = getSolution(squares);
-    dispatch(setSolution(solvedPuzzle));
-    setSolved(true);
-  }
+  useEffect(() => {
+    let sudoku = new Puzzle2(squares);
+    sudoku.solve();
+  }, [squares]
+  ) 
+  
+  // const solve = e => {
+  //   let solvedPuzzle = getSolution(squares);
+  //   dispatch(setSolution(solvedPuzzle));
+  //   setSolved(true);
+  // }
   
   const sortSolve = e => {
     let result = getSortSolution(squares);
